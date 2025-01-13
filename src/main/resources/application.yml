@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: board
+  datasource:
+    url: jdbc:mysql://localhost:3306/users  # MySQL DB URL
+    username: root                          # MySQL 사용자 이름
+    password: 1234                          # MySQL 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update                      # 개발 중에는 'update', 운영에서는 'validate' 사용 권장
+    show-sql: true
+    generate-ddl: true
+    defer-datasource-initialization: true  # 데이터 소스 초기화를 지연하여 테이블 생성 후 실행되도록 보장
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect # MySQL 방언 설정
+
+  sql:
+    init:
+      mode: always
+
