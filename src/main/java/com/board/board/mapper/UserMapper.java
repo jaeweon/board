@@ -5,10 +5,12 @@ import com.board.board.entity.User;
 import com.board.board.request.UserRequest;
 import com.board.board.response.UserResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User toEntity(UserRequest userRequest);
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserResponse toResponse(User user);
 

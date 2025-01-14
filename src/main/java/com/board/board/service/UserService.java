@@ -1,6 +1,7 @@
 package com.board.board.service;
 
 import com.board.board.dto.UserDTO;
+import com.board.board.request.UserDeleteRequest;
 import com.board.board.request.UserRequest;
 import com.board.board.request.UserUpdateRequest;
 import com.board.board.response.UserResponse;
@@ -17,6 +18,6 @@ public interface UserService {
 
     UserResponse updatePassword(UserUpdateRequest userUpdateRequest);
 
-    void deletedId(String id, String password);
+    void deletedId(UserDeleteRequest userDeleteRequest);
 
 }

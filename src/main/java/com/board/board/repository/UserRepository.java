@@ -1,5 +1,6 @@
 package com.board.board.repository;
 
+import com.board.board.dto.UserDTO;
 import com.board.board.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,5 +10,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUserId(String userId);
     Optional<User> findByUserId(String userId);
 
-    User findByUserIdAndPassword(String userId, String password);
+    UserDTO findByUserIdAndPassword(String userId, String password);
 }

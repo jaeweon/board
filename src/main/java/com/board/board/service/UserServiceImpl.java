@@ -5,12 +5,15 @@ import com.board.board.entity.User;
 import com.board.board.exception.UserAlreadyExistsException;
 import com.board.board.mapper.UserMapper;
 import com.board.board.repository.UserRepository;
+import com.board.board.request.UserDeleteRequest;
 import com.board.board.request.UserRequest;
 import com.board.board.request.UserUpdateRequest;
 import com.board.board.response.UserResponse;
 import com.board.board.util.BcryptUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import javax.naming.AuthenticationException;
 
 @Service
 @RequiredArgsConstructor
@@ -44,10 +47,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.toResponse(savedUser);
     }
 
-
     @Override
     public UserResponse login(String userId, String password) {
-        // User 조회
+        // 유저 조회
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid User ID"));
 
@@ -56,10 +58,9 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Invalid User Password");
         }
 
-        // Entity -> ResponseDTO 변환 후 반환
+        // User -> UserResponse 변환
         return userMapper.toResponse(user);
     }
-
 
     @Override
     public UserResponse updatePassword(UserUpdateRequest userUpdateRequest) {
@@ -90,11 +91,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserInfo(String userId) {
-        return null;
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        return userMapper.toDTO(user);
     }
 
     @Override
-    public void deletedId(String id, String password) {
+    public void deletedId(UserDeleteRequest userDeleteRequest) {
 
+        // 사용자 조회
+        User user = userRepository.findByUserId(userDeleteRequest.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userDeleteRequest.getUserId()));
+
+        // 비밀번호 검증
+        if (!BcryptUtil.matches(userDeleteRequest.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        userRepository.delete(user);
     }
 }

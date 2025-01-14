@@ -10,4 +10,9 @@ public class UserResponse {
     private String nickName;
     private boolean isAdmin;
     private boolean isWithdraw;
+    private Status status;
+
+    public enum Status {
+        DEFAULT, ADMIN, DELETED
+    }
 }
