@@ -1,5 +1,6 @@
 package com.board.board.controller;
 
+import com.board.board.aop.LoginCheck;
 import com.board.board.dto.UserDTO;
 import com.board.board.request.UserDeleteRequest;
 import com.board.board.request.UserLoginRequest;
@@ -12,6 +13,7 @@ import com.board.board.service.UserService;
 import com.board.board.util.SessionUtil;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,8 +58,9 @@ public class UserController {
         return new UserInfoResponse(userInfo);
     }
 
-    @PostMapping("/updatePassword")
-    public ResponseEntity<UserResponse> updatePassword(@RequestBody UserUpdateRequest userRequest) {
+    @PutMapping("/updatePassword")
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    public ResponseEntity<UserResponse> updatePassword(String accountId, @RequestBody UserUpdateRequest userRequest) {
         UserResponse response = userService.updatePassword(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -67,5 +70,9 @@ public class UserController {
         userService.deletedId(userRequest);
     }
 
+    @PutMapping("/logout")
+    public void logout(HttpSession session) {
+        SessionUtil.clear(session);
+    }
 
 }
